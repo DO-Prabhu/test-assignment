@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>FreightWise Programming Test</title>
+
+    <script>
+      "use strict";
+
+      /**
+       * Software Developer test.
+       *
+       * Doing research and making API calls are an important part of what we do at FreightWise.  This test will
+       * demonstrate your abilities to:
+       *
+       * - Make an API call
+       * - Research an API
+       * - Do basic DOM manipulation
+       * - Parse data
+       * - Handle errors
+       * - Be creative
+       *
+       * Feel free to ask any questions you may have.  Use a lot of comments, and explain why you are doing things.
+       * Don't spend more than 1-2 hours on it - we aren't expecting a finished product, but it should work and look
+       * nice.  Feel free to use any third party libraries, and if you do so, explain why you used them instead of
+       * built in browser APIs.
+       *
+       * Instructions:
+       * - Use the axios (https://github.com/axios/axios) request library to make an API call to the OpenWeatherMap
+       *   API for Current Weather Data using this API key:  25e989bd41e3e24ce13173d8126e0fd6
+       *   We've already imported this library to get you started.
+       * - Use either async/await or Promises.
+       * - Get the weather for Brentwood, TN, and write it to the DOM using the `setResults` method below.  Be
+       *   creative and make it look nice.
+       * - Handle errors and use the `setError` method below to display the error.  Also make it look nice.
+       * - If you find any mistakes in the test, fix them, and leave a comment about what you fixed and why.
+       * - Make sure your code is readable and maintainable.
+       * - Use plenty of descriptive comments.
+       * - Make sure your code runs in the latest version of Google Chrome and Firefox (ES6 is allowed).
+       * - Make your code live (GitHub with GitHub pages works nice).
+       * - Send a link to your finished test to dev-team-jobs@freightwisellc.com.
+       *
+       * Feel free to add your own twist to it (completely optional).  Here are a few ideas:
+       * - Sign up for NewsAPI.org and get the Top Headlines and show them along with the weather.
+       * - Use the browser location API to get the user's current location, and show that location's weather.
+       * - Show a satellite map of the weather in Brentwood.
+       * - Request a user's phone number and send them an SMS with the weather.
+       */
+      class Test {
+        constructor() {
+          this.testResults = document.getElementsByClassName("test-results");
+        }
+
+        async run() {
+          console.log(new Date().toISOString(), "[Test]", "Running the test");
+
+          // TODO: Make the API call and handle the results
+        }
+
+        setError(message) {
+          // TODO: Format the error
+
+          /** I have handled error in a try catch block. I checked the error by mis typing the API, and am getting 401 error.
+         Following is the logic to show error message in DOM.
+         First, took a div element and appended a paragraph element showing the error message.
+         **/
+
+          const divContainer =
+            document.getElementsByClassName("test-results")[0];
+          const paraElem = document.createElement("p");
+          paraElem.style.color = "red";
+          paraElem.innerHTML = message;
+          divContainer.appendChild(paraElem);
+          //this.divContainer.innerHTML = (message || "").toString();
+        }
+
+        setResults(results, id) {
+          // TODO: Format the results
+          //const divContainer = this.testResults[0];
+
+          // Get the table body section
+
+          if (id === "tblBody") {
+            const tbl = document.getElementById("tblBody");
+
+            // Add table rows into table body section element and insert into Table body
+            tbl.innerHTML += `<tr>
+            <td>${results.sys.country}</td>
+            <td>${results.name}</td>
+            <td>${results.coord.lon}</td>
+            <td>${results.coord.lat}</td>
+            <td>${results.weather[0].description}</td>
+            <td>${results.main.temp}</td>
+            <td>${results.main.humidity}</td>
+            <td>${results.wind.speed}</td>
+            </tr>`;
+
+            // const tblElem = document.querySelector('table');
+            // const divContainer = document.getElementsByClassName("test-results")[0];
+            // divContainer.appendChild(tblElem);
+            // this.testResults.appendChild(tblElem);
+          }
+        }
+      }
+    </script>
+
+    <style>
+      .button-container {
+        text-align: center;
+      }
+
+      .button-container > button {
+        margin: 0;
+        padding: 10px 18px;
+        color: white;
+        background-color: #008000;
+        border: none;
+        border-radius: 3px;
+        transition: all 200ms ease-in-out;
+        font-size: 14px;
+      }
+
+      .button-container > button:hover {
+        background-color: #00a000;
+      }
+
+      .button-container > button:active {
+        background-color: #006000;
+      }
+
+      table,
+      th,
+      tr,
+      td {
+        border: 1px solid black;
+      }
+
+      .geolocation-button-container {
+        text-align: center;
+      }
+      .geolocation-button-container > button {
+        background-color: #008CBA;;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+      }
+    </style>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <div class="test-results"></div>
+
+    <div class="button-container"></div>
+
+    <!-- HTML Table element to show data loaded from API -->
+    <h2>Get Brentwood City Weather</h2>
+    <table class="table-border">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Name</th>
+          <th>Longitude</th>
+          <th>Latitude</th>
+          <th>Weather</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Wind Speed</th>
+        </tr>
+      </thead>
+      <tbody id="tblBody"></tbody>
+    </table>
+
+    <div class="geolocation-button-container"></div>
+
+    <!-- HTML Table element to show data loaded from API -->
+    <h2>Get current location weather</h2>
+    <table class="table-border">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Name</th>
+          <th>Longitude</th>
+          <th>Latitude</th>
+          <th>Weather</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Wind Speed</th>
+        </tr>
+      </thead>
+      <tbody id="tblCurrentBody"></tbody>
+    </table>
+    <script>
+      "use strict";
+
+      /**
+       * Creates a button for kicking off the test and adds it to the DOM.
+       *
+       * @param {HTMLElement} context  the parent element to add the button to
+       * @param {Test}        test     the test to be executed
+       * @returns {HTMLElement} the button added to the test
+       */
+      function addButtonForTest(context, test) {
+        let testButton = document.createElement("button");
+
+        testButton.type = "button";
+        testButton.innerText = "Get the Nashville Weather";
+        testButton.onclick = () => test.run();
+
+        context.appendChild(testButton);
+
+        return testButton;
+      }
+
+      /**
+       * Creates a button for fetching the results from API and showing into the DOM.
+       *
+       * @param {HTMLElement} context  the parent element to add the button to
+       * @param {Test}        test     the data from weather API is loaded into here
+       * @returns {HTMLElement} the button added to the test and fetches the result to show the data into table
+       */
+
+      async function getWeatherFromApi(context, test) {
+        let getWeatherButton = document.createElement("button");
+
+        getWeatherButton.type = "button";
+        getWeatherButton.innerText = "Get weather for Brentwood, TN";
+
+        // API Call within try-catch
+        try {
+          const results = await axios.get(
+            "https://api.openweathermap.org/data/2.5/weather?q=Brentwood&appid=25e989bd41e3e24ce13173d8126e0fd6"
+          );
+
+          const data = results.data;
+          const id = "tblBody";
+          getWeatherButton.onclick = () => test.setResults(data, id);
+        } catch (error) {
+          console.log(error.message);
+          test.setError(error.message);
+        }
+
+        context.appendChild(getWeatherButton);
+        return getWeatherButton;
+      }
+
+      /**
+       * Creates a button for fetching the results from API and showing into the DOM.
+       *
+       * @param {HTMLElement} context  the parent element to add the button to
+       * @param {Test}        test     the data from weather API is loaded for the current location into here
+       * @returns {HTMLElement} the button added to the test and fetches the result to show the data into table
+       */
+
+      async function getCurrentLocationWeather(context, test) {
+        let getGeoLocationWeatherButton = document.createElement("button");
+
+        getGeoLocationWeatherButton.type = "button";
+        getGeoLocationWeatherButton.innerText = "Get current location weather";
+
+        // API Call within try-catch
+        try {
+          const results = await axios.get(
+            "https://api.openweathermap.org/data/2.5/weather?q=Brentwood&appid=25e989bd41e3e24ce13173d8126e0fd6"
+          );
+
+          const data = results.data;
+          const id = "tblCurrentBody";
+          getGeoLocationWeatherButton.onclick = () => test.setResults(data, id);
+        } catch (error) {
+          console.log(error.message);
+          test.setError(error.message);
+        }
+
+        context.appendChild(getGeoLocationWeatherButton);
+        return getGeoLocationWeatherButton;
+      }
+
+      // Create the Test and add a button to the UI for running the test
+      const test = new Test();
+      const buttonContainer =
+        document.getElementsByClassName("button-container")[0];
+
+      // Get BrentWood weather
+      const weatherButtonContainer =
+        document.getElementsByClassName("button-container")[0];
+
+      // Get current location weather
+      const geolocationButtonContainer =
+        document.getElementsByClassName("geolocation-button-container")[0];
+
+      // Add Button for Test
+      addButtonForTest(buttonContainer, test);
+
+      // Weather API button here
+      getWeatherFromApi(weatherButtonContainer, test);
+
+      // Current location weather
+      getCurrentLocationWeather(geolocationButtonContainer, test);
+    </script>
+  </body>
+</html>
