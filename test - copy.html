@@ -80,7 +80,7 @@
           // TODO: Format the results
           //const divContainer = this.testResults[0];
 
-          // Get the table body section
+          // Get the table body section for Brentwood
 
           if (id === "tblBody") {
             const tbl = document.getElementById("tblBody");
@@ -101,6 +101,24 @@
             // const divContainer = document.getElementsByClassName("test-results")[0];
             // divContainer.appendChild(tblElem);
             // this.testResults.appendChild(tblElem);
+          }
+
+          // Get the table body section for current location
+
+          if (id === "tblCurrentBody") {
+            const tbl = document.getElementById("tblCurrentBody");
+
+            // Add table rows into table body section element and insert into Table body
+            tbl.innerHTML += `<tr>
+            <td>${results.sys.country}</td>
+            <td>${results.name}</td>
+            <td>${results.coord.lon}</td>
+            <td>${results.coord.lat}</td>
+            <td>${results.weather[0].description}</td>
+            <td>${results.main.temp}</td>
+            <td>${results.main.humidity}</td>
+            <td>${results.wind.speed}</td>
+            </tr>`;
           }
         }
       }
@@ -141,7 +159,7 @@
         text-align: center;
       }
       .geolocation-button-container > button {
-        background-color: #008CBA;;
+        background-color: #008cba;
         border: none;
         color: white;
         padding: 15px 32px;
@@ -162,7 +180,7 @@
 
     <div class="button-container"></div>
 
-    <!-- HTML Table element to show data loaded from API -->
+    <!-- HTML Table element to show data loaded from API  -->
     <h2>Get Brentwood City Weather</h2>
     <table class="table-border">
       <thead>
@@ -180,9 +198,10 @@
       <tbody id="tblBody"></tbody>
     </table>
 
+    <!-- Geo location API button-->
     <div class="geolocation-button-container"></div>
 
-    <!-- HTML Table element to show data loaded from API -->
+    <!-- HTML Table element to show data loaded from API for current location-->
     <h2>Get current location weather</h2>
     <table class="table-border">
       <thead>
@@ -261,30 +280,41 @@
        * @returns {HTMLElement} the button added to the test and fetches the result to show the data into table
        */
 
-      async function getCurrentLocationWeather(context, test) {
+      function getCurrentLocationWeather(context, test) {
         let getGeoLocationWeatherButton = document.createElement("button");
 
         getGeoLocationWeatherButton.type = "button";
         getGeoLocationWeatherButton.innerText = "Get current location weather";
 
-        // API Call within try-catch
-        try {
-          const results = await axios.get(
-            "https://api.openweathermap.org/data/2.5/weather?q=Brentwood&appid=25e989bd41e3e24ce13173d8126e0fd6"
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              const { latitude } = position.coords;
+              const { longitude } = position.coords;
+              axios
+                .get(
+                  `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=25e989bd41e3e24ce13173d8126e0fd6`
+                )
+                .then((resp) => {
+                  test.setResults(resp.data, "tblCurrentBody");
+                })
+                .catch((err) => {
+                  // Handle Error Here
+                  test.setError(err.message);
+                });
+            },
+            function () {
+              alert("Could not get location");
+            }
           );
-
-          const data = results.data;
-          const id = "tblCurrentBody";
-          getGeoLocationWeatherButton.onclick = () => test.setResults(data, id);
-        } catch (error) {
-          console.log(error.message);
-          test.setError(error.message);
         }
 
         context.appendChild(getGeoLocationWeatherButton);
         return getGeoLocationWeatherButton;
       }
-
+      
+      
+      
       // Create the Test and add a button to the UI for running the test
       const test = new Test();
       const buttonContainer =
@@ -295,8 +325,9 @@
         document.getElementsByClassName("button-container")[0];
 
       // Get current location weather
-      const geolocationButtonContainer =
-        document.getElementsByClassName("geolocation-button-container")[0];
+      const geolocationButtonContainer = document.getElementsByClassName(
+        "geolocation-button-container"
+      )[0];
 
       // Add Button for Test
       addButtonForTest(buttonContainer, test);
