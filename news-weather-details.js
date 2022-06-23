@@ -12,13 +12,15 @@ async function newsApi() {
       const results = await axios.get(
         `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=61affb5f492844a48f8170f24e112d78`
       );
+      console.log(results);
       const data = results.data;
-      console.log(data);
+      console.log(data.articles[1]);
     } catch (error) {
       test.setError(error.message);
     }
 
-    console.log(contents.item(0));
-    console.log(contents.item(1));
-    console.log(contents.item(2));
+   contents.item[0].insertAdjacentText(data.articles[1]);
   }
+
+
+ 
